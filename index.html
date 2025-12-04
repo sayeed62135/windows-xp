@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitchlvin XP - Professional Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- XP FONTS & BASICS --- */
+        @font-face {
+            font-family: 'Tahoma';
+            src: local('Tahoma'), local('Verdana'), sans-serif;
+        }
+        
+        body {
+            font-family: 'Tahoma', sans-serif;
+            overflow: hidden;
+            user-select: none;
+            cursor: default;
+        }
+
+        /* --- CLASSIC XP ASSETS & CURSORS --- */
+        .cursor-default { cursor: default; }
+        .cursor-pointer { cursor: pointer; }
+        .cursor-progress { cursor: progress; }
+        .cursor-text { cursor: text; }
+
+        /* --- WINDOW STYLING (LUNA BLUE) --- */
+        .xp-window {
+            background-color: #ECE9D8;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 3px;
+            /* The classic blue thick border */
+            background: linear-gradient(180deg, #0058EE 0%, #3593FF 4%, #288EFF 18%, #127dff 20%, #0369fc 39%, #0262ee 40%, #0057e5 100%);
+            padding: 3px;
+        }
+
+        .xp-window-inner {
+            background-color: #ECE9D8; /* content bg */
+            border: 1px solid #0058EE; /* inner border */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window-header {
+            /* The glossy title bar */
+            height: 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .window-title {
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none; /* Let clicks pass to header for drag */
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .win-btn {
+            width: 21px;
+            height: 21px;
+            border-radius: 3px;
+            border: 1px solid white;
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .win-btn:hover { filter: brightness(1.1); }
+        .win-btn:active { filter: brightness(0.9); }
+
+        .btn-min, .btn-max {
+            background: linear-gradient(180deg, #447CEB 0%, #2963D7 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .btn-close {
+            background: linear-gradient(180deg, #E87A6E 0%, #D84236 100%);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .window-body {
+            flex: 1;
+            background-color: white;
+            border: 1px solid #8eacd6; /* content border */
+            position: relative;
+            overflow: hidden;
+            margin: 0 2px 2px 2px;
+        }
+
+        /* --- TASKBAR --- */
+        .taskbar {
+            background: linear-gradient(to bottom, #245DDA 0%, #3780F3 4%, #288EFF 10%, #1773D4 90%, #1562C1 100%);
+            border-top: 1px solid #3F8CF3;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,0.2);
+        }
+
+        .start-btn {
+            background: linear-gradient(to bottom, #3C8D0D 0%, #61C526 10%, #47B318 40%, #2D8E09 100%);
+            border-radius: 0 10px 10px 0;
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+            transition: filter 0.1s;
+        }
+        .start-btn:hover { filter: brightness(1.1); }
+        .start-btn:active { filter: brightness(0.9); transform: translateY(1px); }
+
+        .task-item {
+            background: #3C81F3;
+            border-radius: 3px;
+            box-shadow: inset 0 0 1px 1px rgba(255,255,255,0.2), 1px 1px 2px rgba(0,0,0,0.5);
+            color: white;
+            transition: all 0.1s;
+        }
+        
+        .task-item:hover {
+            background: #5394FF;
+        }
+
+        .task-item.active {
+            background: #1E52B7;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);
+            color: #efefef;
+        }
+
+        /* --- START MENU --- */
+        .start-menu-shadow {
+            filter: drop-shadow(4px 4px 5px rgba(0,0,0,0.5));
+        }
+        .start-header {
+            background: linear-gradient(to bottom, #1566DE 0%, #3682E6 100%);
+            border-radius: 5px 5px 0 0;
+        }
+        .start-body {
+            border: 1px solid #3682E6;
+            border-top: none;
+            background: white;
+        }
+        .start-footer {
+            background: linear-gradient(to bottom, #4282D6 0%, #3974C6 100%);
+        }
+        .start-item:hover {
+            background-color: #316AC5;
+            color: white;
+        }
+        .start-item:hover * {
+            color: white;
+        }
+
+        /* --- DESKTOP ICONS --- */
+        .desktop-icon {
+            text-align: center;
+            width: 75px;
+            padding: 5px;
+            border: 1px solid transparent;
+            position: absolute; /* Changed to absolute for dragging */
+        }
+        .desktop-icon:hover {
+            background-color: rgba(0, 88, 238, 0.1);
+            border: 1px solid rgba(0, 88, 238, 0.2);
+            border-radius: 3px;
+        }
+        .desktop-icon.selected {
+            background-color: rgba(11, 97, 255, 0.3);
+            border: 1px solid rgba(11, 97, 255, 0.5);
+            border-radius: 3px;
+        }
+        .desktop-icon.selected img {
+            opacity: 0.8;
+            filter: drop-shadow(0 0 2px rgba(11,97,255,0.5));
+        }
+        .desktop-icon p {
+            background: none;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            margin-top: 2px;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+        .desktop-icon.selected p {
+            background-color: #0B61FF;
+        }
+
+        /* --- UTILS --- */
+        .pixelated { image-rendering: pixelated; }
+        .crt-scanline::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        
+        /* Explorer Sidebar Gradient */
+        .explorer-sidebar {
+            background: linear-gradient(180deg, #748AFF 0%, #4057D3 100%);
+        }
+        .explorer-header {
+            background: linear-gradient(90deg, white 0%, #F0F0F0 100%);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Context Menu */
+        #context-menu {
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            border: 1px solid #999;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 16px; height: 16px; background: #ECE9D8; }
+        ::-webkit-scrollbar-button { background: #ECE9D8; width: 16px; height: 16px; border: 1px solid #F1EFE2; box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #ACA899; }
+        ::-webkit-scrollbar-thumb { background: #CDD3E6; border: 1px solid white; box-shadow: inset 1px 1px 0 #F1EFE2, inset -1px -1px 0 #ACA899; }
+        
+        /* Error dialog */
+        .error-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: #ECE9D8;
+            border: 2px solid #0058EE;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: none;
+        }
+        
+        /* Paint tools */
+        .paint-tool {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #999;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .paint-tool.active {
+            border: 2px solid #0058EE;
+        }
+        
+        /* Shutdown Dialog */
+        .shutdown-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: #ECE9D8;
+            border: 2px solid #0058EE;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: none;
+            width: 350px;
+        }
+        
+        .shutdown-dialog-header {
+            background: linear-gradient(180deg, #0058EE 0%, #3593FF 4%, #288EFF 18%, #127dff 20%, #0369fc 39%, #0262ee 40%, #0057e5 100%);
+            color: white;
+            padding: 5px 10px;
+            margin: -20px -20px 15px -20px;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+        }
+        
+        .shutdown-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .shutdown-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .shutdown-option:hover {
+            background-color: rgba(0, 88, 238, 0.1);
+        }
+        
+        .shutdown-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        
+        .shutdown-text {
+            font-size: 12px;
+            color: #333;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen bg-black overflow-hidden crt-scanline" oncontextmenu="return false;">
+
+    <!-- --- BOOT SCREEN --- -->
+    <div id="boot-screen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center">
+        <!-- Windows Logo -->
+        <svg class="w-32 h-32 mb-8" viewBox="0 0 24 24">
+            <path fill="#FFA500" d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z"/>
+            <path fill="#00A1F1" d="M4 4h5v5H4zm11 0h5v5h-5zM4 15h5v5H4zm11 0h5v5h-5z"/>
+        </svg>
+        
+        <!-- Text Content -->
+        <div class="text-white text-3xl font-bold mb-2">Mitchlvin xp</div>
+        <div class="text-gray-400 text-sm mb-12">Visual Designer</div>
+        
+        <!-- Progress Bar - Classic XP Style with Multiple Segments -->
+        <div class="w-64 h-3 border border-gray-600 rounded p-[1px] relative bg-black overflow-hidden">
+            <!-- Dark background -->
+            <div class="absolute top-[1px] bottom-[1px] left-[1px] right-[1px] bg-gray-800"></div>
+            <!-- Multiple animated blue segments -->
+            <div class="absolute top-[1px] bottom-[1px] flex h-full">
+                <div class="w-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 animate-xp-segment-1 opacity-90"></div>
+                <div class="w-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 animate-xp-segment-2 opacity-90"></div>
+                <div class="w-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 animate-xp-segment-3 opacity-90"></div>
+                <div class="w-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 animate-xp-segment-4 opacity-90"></div>
+                <div class="w-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 animate-xp-segment-5 opacity-90"></div>
+            </div>
+        </div>
+        <style>
+            @keyframes xp-segment-1 {
+                0% { transform: translateX(-120px); }
+                100% { transform: translateX(400px); }
+            }
+            @keyframes xp-segment-2 {
+                0% { transform: translateX(-240px); }
+                100% { transform: translateX(280px); }
+            }
+            @keyframes xp-segment-3 {
+                0% { transform: translateX(-360px); }
+                100% { transform: translateX(160px); }
+            }
+            @keyframes xp-segment-4 {
+                0% { transform: translateX(-480px); }
+                100% { transform: translateX(40px); }
+            }
+            @keyframes xp-segment-5 {
+                0% { transform: translateX(-600px); }
+                100% { transform: translateX(-80px); }
+            }
+            .animate-xp-segment-1 {
+                animation: xp-segment-1 4s linear infinite;
+            }
+            .animate-xp-segment-2 {
+                animation: xp-segment-2 4s linear infinite;
+            }
+            .animate-xp-segment-3 {
+                animation: xp-segment-3 4s linear infinite;
+            }
+            .animate-xp-segment-4 {
+                animation: xp-segment-4 4s linear infinite;
+            }
+            .animate-xp-segment-5 {
+                animation: xp-segment-5 4s linear infinite;
+            }
+        </style>
+        
+        <!-- Footer Text -->
+        <div class="absolute bottom-8 left-8 text-white text-sm">For the best experience Enter Full Screen (F11)</div>
+        <div class="absolute bottom-8 right-8 text-white text-sm">Portfolio</div>
+    </div>
+
+    <!-- --- LOGIN SCREEN --- -->
+    <div id="login-screen" class="fixed inset-0 z-[90] hidden bg-[#003399] font-sans">
+        <div class="w-full h-full flex flex-col">
+            <div class="h-24 bg-[#003399] border-b-2 border-[#F6851F]"></div>
+            <div class="flex-1 bg-[#5A7EDC] flex items-center justify-center gap-10">
+                <div class="text-right border-r border-white/30 pr-10 py-10">
+                    <svg class="w-40 h-40 drop-shadow-lg" viewBox="0 0 24 24">
+                        <path fill="#FFA500" d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z"/>
+                        <path fill="#00A1F1" d="M4 4h5v5H4zm11 0h5v5h-5zM4 15h5v5H4zm11 0h5v5h-5z"/>
+                    </svg>
+                    <div class="text-white text-2xl font-bold mt-4">Mitchlvin xp</div>
+                    <div class="text-white text-sm mt-1">Visual Designer</div>
+                </div>
+                <div class="pl-0">
+                    <div onclick="login()" class="flex items-center gap-4 group cursor-pointer hover:bg-[#F9A838]/20 p-2 rounded-lg transition-colors">
+                        <div class="w-16 h-16 bg-yellow-300 rounded border-2 border-white overflow-hidden shadow-lg relative">
+                             <!-- Simple Duck SVG -->
+                             <svg class="w-full h-full text-orange-500 bg-yellow-100 p-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                        </div>
+                        <div class="text-white">
+                            <div class="text-2xl font-normal">Mitch Ivins</div>
+                            <div class="text-sm text-blue-100 group-hover:text-white">Visual Designer</div>
+                        </div>
+                    </div>
+                    <div class="text-white text-center mt-4">To begin, click on Mitch Ivins to log in</div>
+                </div>
+            </div>
+            <div class="h-24 bg-[#003399] border-t-2 border-[#F6851F] flex items-center justify-between px-10">
+                <div class="flex items-center gap-2 text-white cursor-pointer hover:underline" onclick="showShutdownDialog()">
+                    <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded border border-white flex items-center justify-center shadow">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    </div>
+                    <span>Restart Mitchlvin XP</span>
+                </div>
+                <div class="text-white text-sm max-w-md">
+                    After you log on, the system's yours to explore. Every detail has been designed with a purpose.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- DESKTOP --- -->
+    <div id="desktop" class="absolute inset-0 hidden flex-col justify-between overflow-hidden" 
+         style="background: url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png') no-repeat center center fixed; background-size: cover;">
+        
+        <!-- Desktop Area -->
+        <div id="desktop-area" class="flex-1 relative z-0" onclick="deselectAll()">
+            <!-- Icons injected via JS -->
+        </div>
+
+        <!-- Start Menu -->
+        <div id="start-menu" class="absolute bottom-[30px] left-0 w-[380px] z-[60] hidden start-menu-shadow font-sans text-xs">
+            <!-- Header -->
+            <div class="start-header h-16 flex items-center px-2 gap-3 shadow-inner border-b border-blue-400">
+                <div class="w-10 h-10 rounded border-2 border-white overflow-hidden bg-yellow-200 shadow-md">
+                    <svg class="w-full h-full text-orange-500 p-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                </div>
+                <span class="text-white font-bold text-lg drop-shadow">Mitch Ivin</span>
+            </div>
+            
+            <!-- Body -->
+            <div class="start-body flex h-[380px]">
+                <!-- Left (Pinned) -->
+                <div class="w-1/2 bg-white flex flex-col py-1">
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer mb-1" onclick="openApp('email')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/outlook_express-4.png" class="w-8 h-8">
+                        <div>
+                            <div class="font-bold text-gray-800">E-mail</div>
+                            <div class="text-gray-500 text-[10px]">Outlook Express</div>
+                        </div>
+                    </div>
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer border-b border-gray-200 pb-2" onclick="openApp('explorer')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/msie1-3.png" class="w-8 h-8">
+                        <div>
+                            <div class="font-bold text-gray-800">Internet</div>
+                            <div class="text-gray-500 text-[10px]">Internet Explorer</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-1">
+                        <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer" onclick="openApp('notepad')">
+                            <img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png" class="w-6 h-6">
+                            <span class="text-gray-700">Notepad</span>
+                        </div>
+                        <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer" onclick="openApp('paint')">
+                            <img src="https://win98icons.alexmeub.com/icons/png/paint-4.png" class="w-6 h-6">
+                            <span class="text-gray-700">Paint</span>
+                        </div>
+                        <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer" onclick="openApp('minesweeper')">
+                            <img src="https://win98icons.alexmeub.com/icons/png/game_mine_1-0.png" class="w-6 h-6">
+                            <span class="text-gray-700">Minesweeper</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-auto px-2 py-2 text-center border-t border-gray-200 bg-blue-50 cursor-default">
+                        <span class="font-bold text-gray-700">All Programs ▶</span>
+                    </div>
+                </div>
+
+                <!-- Right (System) -->
+                <div class="w-1/2 bg-[#D3E5FA] border-l border-[#95BDE9] flex flex-col py-1 text-[#00136b]">
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer font-bold" onclick="openApp('explorer', 'My Documents')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png" class="w-5 h-5">
+                        <span>My Documents</span>
+                    </div>
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer font-bold" onclick="openApp('explorer', 'My Recent Documents')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs_small-4.png" class="w-5 h-5">
+                        <span>My Recent Docs</span>
+                    </div>
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer font-bold border-b border-[#95BDE9] pb-1 mb-1" onclick="openApp('explorer', 'My Pictures')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/camera-2.png" class="w-5 h-5">
+                        <span>My Pictures</span>
+                    </div>
+
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer font-bold" onclick="openApp('explorer', 'My Computer')">
+                        <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer_cool-0.png" class="w-5 h-5">
+                        <span>My Computer</span>
+                    </div>
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer border-b border-[#95BDE9] pb-1 mb-1">
+                        <img src="https://win98icons.alexmeub.com/icons/png/network_cool_two_pcs-0.png" class="w-5 h-5">
+                        <span>My Network Places</span>
+                    </div>
+
+                    <div class="start-item px-2 py-1 flex items-center gap-2 cursor-pointer">
+                        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear_cool-0.png" class="w-5 h-5">
+                        <span>Control Panel</span>
+                    </div>
+                    <div class="mt-auto px-2 pb-2 flex items-center gap-2 cursor-pointer font-bold">
+                        <img src="https://win98icons.alexmeub.com/icons/png/help_book_big-0.png" class="w-5 h-5">
+                        <span>Help and Support</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="start-footer h-10 flex items-center justify-end gap-2 px-3">
+                <div class="flex items-center gap-1 cursor-pointer hover:text-white text-white/90" onclick="logout()">
+                    <div class="bg-[#E58D36] p-0.5 rounded shadow border border-white/50"><svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg></div>
+                    <span>Log Off</span>
+                </div>
+                <div class="flex items-center gap-1 cursor-pointer hover:text-white text-white/90 ml-2" onclick="showShutdownDialog()">
+                    <div class="bg-[#D34132] p-0.5 rounded shadow border border-white/50"><svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" /></svg></div>
+                    <span>Turn Off Computer</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Taskbar -->
+        <div class="taskbar h-[30px] w-full absolute bottom-0 z-[100] flex items-center select-none font-sans">
+            <!-- Start Btn -->
+            <div class="start-btn h-full px-2 flex items-center gap-1 cursor-pointer relative z-10 mr-1" onclick="toggleStartMenu()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Microsoft_Windows_XP_Logo.svg" class="w-5 h-5 italic drop-shadow-sm">
+                <span class="text-white font-bold italic text-[14px] pr-2" style="text-shadow: 1px 1px 1px rgba(0,0,0,0.5);">start</span>
+            </div>
+
+            <!-- Quick Launch -->
+            <div class="h-full px-2 flex items-center gap-2 border-r border-[rgba(0,0,0,0.1)] shadow-[1px_0_0_rgba(255,255,255,0.1)] mr-1">
+                <img src="https://win98icons.alexmeub.com/icons/png/msie1-3.png" class="w-4 h-4 cursor-pointer hover:brightness-110" onclick="openApp('explorer')">
+                <img src="https://win98icons.alexmeub.com/icons/png/outlook_express-4.png" class="w-4 h-4 cursor-pointer hover:brightness-110" onclick="openApp('email')">
+                <img src="https://win98icons.alexmeub.com/icons/png/desktop-2.png" class="w-4 h-4 cursor-pointer hover:brightness-110" onclick="minimizeAll()">
+            </div>
+
+            <!-- Task Items Area -->
+            <div id="taskbar-list" class="flex-1 flex items-center px-1 gap-1 overflow-hidden"></div>
+
+            <!-- System Tray -->
+            <div class="h-full bg-[#1290E7] border-l border-[#1975CA] flex items-center px-2 gap-2 shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2)]">
+                <img src="https://win98icons.alexmeub.com/icons/png/loudspeaker_rays-0.png" class="w-4 h-4 cursor-pointer" onclick="toggleVolume()">
+                <span class="text-white text-xs" id="clock">12:00 PM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- ERROR DIALOG --- -->
+    <div id="error-dialog" class="error-dialog">
+        <div class="flex items-center mb-4">
+            <img src="https://win98icons.alexmeub.com/icons/png/messagebox_warning-0.png" class="w-6 h-6 mr-3">
+            <div>
+                <div class="font-bold text-lg" id="error-title">Error</div>
+                <div id="error-message" class="text-sm mt-1">An error occurred.</div>
+            </div>
+        </div>
+        <div class="flex justify-end">
+            <button class="px-4 py-1 bg-[#ECE9D8] border border-[#ACA899] shadow-sm hover:bg-[#F0F0F0]" onclick="closeErrorDialog()">OK</button>
+        </div>
+    </div>
+
+    <!-- --- SHUTDOWN DIALOG --- -->
+    <div id="shutdown-dialog" class="shutdown-dialog">
+        <div class="shutdown-dialog-header">Turn off MitchIvin XP</div>
+        <div class="shutdown-options">
+            <div class="shutdown-option" onclick="restart()">
+                <div class="shutdown-icon bg-green-500">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </div>
+                <div class="shutdown-text">Restart</div>
+            </div>
+            <div class="shutdown-option" onclick="shutdown()">
+                <div class="shutdown-icon bg-red-500">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"></path>
+                    </svg>
+                </div>
+                <div class="shutdown-text">Shut Down</div>
+            </div>
+            <div class="shutdown-option" onclick="closeShutdownDialog()">
+                <div class="shutdown-icon bg-gray-400">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <div class="shutdown-text">Cancel</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- TEMPLATES --- -->
+
+    <!-- Notepad -->
+    <template id="tpl-notepad">
+        <div class="xp-window" style="width: 500px; height: 350px;">
+            <div class="window-header" onmousedown="startDrag(event, this.parentElement)">
+                <div class="window-title"><img src="" class="w-4 h-4 win-icon"> <span class="win-title-text">Notepad</span></div>
+                <div class="window-controls">
+                    <div class="win-btn btn-min" onclick="minimizeWindow(this)">_</div>
+                    <div class="win-btn btn-max" onclick="maximizeWindow(this)">◻</div>
+                    <div class="win-btn btn-close" onclick="closeWindow(this)">X</div>
+                </div>
+            </div>
+            <div class="window-body flex flex-col">
+                <div class="flex text-xs bg-[#ECE9D8] px-1 border-b border-[#D8D2BD] py-0.5">
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="notepadMenu('file')">File</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="notepadMenu('edit')">Edit</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="notepadMenu('format')">Format</span>
+                </div>
+                <textarea class="flex-1 resize-none outline-none border-none p-1 font-mono text-sm win-content-text"></textarea>
+            </div>
+        </div>
+    </template>
+
+    <!-- Explorer (Projects) -->
+    <template id="tpl-explorer">
+        <div class="xp-window" style="width: 700px; height: 500px;">
+            <div class="window-header" onmousedown="startDrag(event, this.parentElement)">
+                <div class="window-title"><img src="" class="w-4 h-4 win-icon"> <span class="win-title-text">Explorer</span></div>
+                <div class="window-controls">
+                    <div class="win-btn btn-min" onclick="minimizeWindow(this)">_</div>
+                    <div class="win-btn btn-max" onclick="maximizeWindow(this)">◻</div>
+                    <div class="win-btn btn-close" onclick="closeWindow(this)">X</div>
+                </div>
+            </div>
+            <div class="window-body flex flex-col bg-[#ECE9D8]">
+                <!-- Toolbar -->
+                <div class="explorer-header p-1 flex items-center gap-2 border-b border-gray-300">
+                    <span class="text-gray-400 text-xs">Address</span>
+                    <div class="flex-1 bg-white border border-[#7F9DB9] px-1 text-xs py-0.5 flex items-center gap-1">
+                        <img src="" class="w-3 h-3 win-icon-addr">
+                        <span class="win-address-text">C:\</span>
+                    </div>
+                    <button class="px-2 py-0.5 bg-[#ECE9D8] border border-[#ACA899] shadow-sm hover:bg-[#F0F0F0]" onclick="explorerNavigate()">Go</button>
+                </div>
+                <!-- Main View -->
+                <div class="flex flex-1 overflow-hidden">
+                    <div class="w-48 explorer-sidebar p-3 text-white text-xs hidden sm:block">
+                        <div class="font-bold mb-2">System Tasks</div>
+                        <div class="pl-2 mb-4 hover:underline cursor-pointer" onclick="explorerTask('info')">View system info</div>
+                        <div class="font-bold mb-2">Other Places</div>
+                        <div class="pl-2 hover:underline cursor-pointer" onclick="explorerTask('desktop')">My Desktop</div>
+                        <div class="pl-2 hover:underline cursor-pointer" onclick="explorerTask('docs')">My Documents</div>
+                        <div class="font-bold mb-2 mt-4">Details</div>
+                        <div id="explorer-details" class="text-xs pl-2"></div>
+                    </div>
+                    <div class="flex-1 bg-white p-4 overflow-y-auto win-content-html grid grid-cols-2 gap-4 content-start"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Paint -->
+    <template id="tpl-paint">
+         <div class="xp-window" style="width: 600px; height: 450px;">
+            <div class="window-header" onmousedown="startDrag(event, this.parentElement)">
+                <div class="window-title"><img src="" class="w-4 h-4 win-icon"> <span class="win-title-text">Paint</span></div>
+                <div class="window-controls">
+                    <div class="win-btn btn-min" onclick="minimizeWindow(this)">_</div>
+                    <div class="win-btn btn-max" onclick="maximizeWindow(this)">◻</div>
+                    <div class="win-btn btn-close" onclick="closeWindow(this)">X</div>
+                </div>
+            </div>
+            <div class="window-body flex flex-col bg-[#BFBFBF]">
+                <div class="bg-[#ECE9D8] text-xs px-1 border-b border-gray-400">
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('file')">File</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('edit')">Edit</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('view')">View</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('image')">Image</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('colors')">Colors</span>
+                    <span class="px-2 hover:bg-[#316AC5] hover:text-white cursor-default" onclick="paintMenu('help')">Help</span>
+                </div>
+                <div class="flex flex-1 overflow-hidden p-1 gap-1">
+                    <div class="w-16 bg-[#ECE9D8] border border-white shadow-sm grid grid-cols-2 gap-0.5 p-0.5 content-start">
+                        <div class="paint-tool active" onclick="selectPaintTool('pen')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                <path d="M2 2l7.586 7.586"></path>
+                            </svg>
+                        </div>
+                        <div class="paint-tool" onclick="selectPaintTool('eraser')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 20H7l-4-4a1 1 0 0 1 0-1.414l9-9a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-4 4z"></path>
+                                <line x1="18" y1="12" x2="12" y2="18"></line>
+                            </svg>
+                        </div>
+                        <div class="paint-tool" onclick="selectPaintTool('line')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="19" x2="19" y2="5"></line>
+                            </svg>
+                        </div>
+                        <div class="paint-tool" onclick="selectPaintTool('rectangle')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            </svg>
+                        </div>
+                        <div class="paint-tool" onclick="selectPaintTool('circle')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                        </div>
+                        <div class="paint-tool" onclick="selectPaintTool('text')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                <line x1="9" y1="20" x2="15" y2="20"></line>
+                                <line x1="12" y1="4" x2="12" y2="20"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-[#808080] p-2 overflow-auto relative">
+                        <canvas width="600" height="400" class="bg-white cursor-crosshair shadow-lg"></canvas>
+                    </div>
+                </div>
+                <!-- Palette -->
+                <div class="h-8 bg-[#ECE9D8] border-t border-gray-400 flex items-center px-1 gap-1">
+                    <div class="w-6 h-6 bg-black border border-gray-500" id="current-color"></div>
+                    <div class="flex flex-wrap w-40 gap-0.5">
+                        <div class="w-3 h-3 bg-black cursor-pointer border border-gray-500" onclick="setColor('black')"></div>
+                        <div class="w-3 h-3 bg-white cursor-pointer border border-gray-500" onclick="setColor('white')"></div>
+                        <div class="w-3 h-3 bg-red-600 cursor-pointer border border-gray-500" onclick="setColor('red')"></div>
+                        <div class="w-3 h-3 bg-green-600 cursor-pointer border border-gray-500" onclick="setColor('green')"></div>
+                        <div class="w-3 h-3 bg-blue-600 cursor-pointer border border-gray-500" onclick="setColor('blue')"></div>
+                        <div class="w-3 h-3 bg-yellow-400 cursor-pointer border border-gray-500" onclick="setColor('yellow')"></div>
+                        <div class="w-3 h-3 bg-purple-600 cursor-pointer border border-gray-500" onclick="setColor('purple')"></div>
+                        <div class="w-3 h-3 bg-orange-600 cursor-pointer border border-gray-500" onclick="setColor('orange')"></div>
+                        <div class="w-3 h-3 bg-pink-600 cursor-pointer border border-gray-500" onclick="setColor('pink')"></div>
+                        <div class="w-3 h-3 bg-gray-600 cursor-pointer border border-gray-500" onclick="setColor('gray')"></div>
+                    </div>
+                    <div class="ml-auto flex items-center gap-2">
+                        <span class="text-xs">Line width:</span>
+                        <input type="range" min="1" max="20" value="2" class="w-20" id="line-width" onchange="setLineWidth(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        /* --- CONFIG --- */
+        const ICONS = {
+            computer: 'https://win98icons.alexmeub.com/icons/png/computer_explorer_cool-0.png',
+            docs: 'https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png',
+            recycle: 'https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png',
+            notepad: 'https://win98icons.alexmeub.com/icons/png/notepad-2.png',
+            paint: 'https://win98icons.alexmeub.com/icons/png/paint-4.png',
+            ie: 'https://win98icons.alexmeub.com/icons/png/msie1-3.png',
+            email: 'https://win98icons.alexmeub.com/icons/png/outlook_express-4.png',
+            folder: 'https://win98icons.alexmeub.com/icons/png/directory_closed-4.png',
+            file: 'https://win98icons.alexmeub.com/icons/png/file_generic-4.png',
+            picture: 'https://win98icons.alexmeub.com/icons/png/camera-2.png',
+            video: 'https://win98icons.alexmeub.com/icons/png/video_-0.png',
+            chart: 'https://win98icons.alexmeub.com/icons/png/chart1-2.png',
+            pdf: 'https://win98icons.alexmeub.com/icons/png/chm-2.png'
+        };
+
+        const APPS = {
+            'notepad': { 
+                title: 'About Me.txt', 
+                icon: ICONS.notepad, 
+                tpl: 'tpl-notepad',
+                data: "Hi! I'm Mitch Ivin.\n\nWelcome to my XP Portfolio.\n\nI am a creative developer who loves retro aesthetics.\n\nGo ahead, drag icons, paint a masterpiece, or explore my projects folder!"
+            },
+            'explorer': {
+                title: 'My Projects',
+                icon: ICONS.folder,
+                tpl: 'tpl-explorer',
+                path: 'C:\\Documents and Settings\\Mitch\\My Projects',
+                data: [
+                    { name: 'MitchIvin XP', desc: 'This website! Recreated in HTML/CSS.', icon: ICONS.computer, type: 'folder' },
+                    { name: 'Retro Ads', desc: 'Motion graphics work.', icon: ICONS.video, type: 'folder' },
+                    { name: 'UI Kit', desc: 'Sports Analytics Dashboard.', icon: ICONS.chart, type: 'folder' },
+                    { name: 'Resume.pdf', desc: 'My professional experience.', icon: ICONS.pdf, type: 'file' }
+                ]
+            },
+            'paint': {
+                title: 'untitled - Paint',
+                icon: ICONS.paint,
+                tpl: 'tpl-paint',
+                data: null
+            },
+            'email': {
+                title: 'Contact',
+                icon: ICONS.email,
+                tpl: 'tpl-notepad',
+                data: "To: mitchellivin@gmail.com\nSubject: Hello!\n\nHey Mitch,\n\nI love your portfolio! Let's work together."
+            },
+            'minesweeper': {
+                title: 'Minesweeper',
+                icon: 'https://win98icons.alexmeub.com/icons/png/game_mine_1-0.png',
+                tpl: 'tpl-notepad',
+                data: "Error: minesweeper.exe is missing or corrupt.\n\n(Just kidding, I didn't build Minesweeper yet!)"
+            }
+        };
+
+        /* --- STATE --- */
+        let zIndex = 100;
+        let windows = {}; // id -> { el, active, minimized }
+        let activeWin = null;
+        let audioContext = null;
+        let volume = 50;
+        let paintTool = 'pen';
+        let paintColor = 'black';
+        let lineWidth = 2;
+        let isDrawing = false;
+        let startX, startY;
+
+        /* --- INIT --- */
+        window.onload = () => {
+            // Fake Boot Time
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('login-screen').classList.remove('hidden');
+            }, 2500);
+
+            renderDesktop();
+            setInterval(updateClock, 1000);
+            updateClock();
+        };
+
+        function login() {
+            initAudio(); // Initialize Audio Context on user interaction
+            playSound('startup');
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('desktop').classList.remove('hidden');
+            document.getElementById('desktop').classList.add('flex');
+            
+            // Auto open About Me
+            setTimeout(() => openApp('notepad'), 1000);
+        }
+
+        function logout() {
+            playSound('click');
+            document.getElementById('desktop').classList.add('hidden');
+            document.getElementById('desktop').classList.remove('flex');
+            document.getElementById('login-screen').classList.remove('hidden');
+            
+            // Close all windows
+            Object.keys(windows).forEach(id => {
+                if (windows[id].el) {
+                    windows[id].el.remove();
+                    document.getElementById('tb-' + id).remove();
+                }
+            });
+            windows = {};
+        }
+
+        function restart() {
+            playSound('click');
+            closeShutdownDialog();
+            document.getElementById('desktop').classList.add('hidden');
+            document.getElementById('desktop').classList.remove('flex');
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('boot-screen').style.display = 'flex';
+            
+            // Simulate restart
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('login-screen').classList.remove('hidden');
+            }, 2500);
+        }
+
+        function shutdown() {
+            playSound('shutdown');
+            closeShutdownDialog();
+            document.getElementById('desktop').classList.add('hidden');
+            document.getElementById('desktop').classList.remove('flex');
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('boot-screen').style.display = 'flex';
+            
+            // Simulate shutdown
+            setTimeout(() => {
+                document.getElementById('boot-screen').innerHTML = `
+                    <div class="text-white text-2xl mb-8">It is now safe to turn off your computer</div>
+                    <svg class="w-32 h-32" viewBox="0 0 24 24">
+                        <path fill="#FFA500" d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z"/>
+                        <path fill="#00A1F1" d="M4 4h5v5H4zm11 0h5v5h-5zM4 15h5v5H4zm11 0h5v5h-5z"/>
+                    </svg>
+                `;
+            }, 1000);
+        }
+
+        function showShutdownDialog() {
+            playSound('click');
+            document.getElementById('shutdown-dialog').style.display = 'block';
+            document.getElementById('shutdown-dialog').style.zIndex = ++zIndex;
+        }
+
+        function closeShutdownDialog() {
+            playSound('click');
+            document.getElementById('shutdown-dialog').style.display = 'none';
+        }
+
+        /* --- SOUND ENGINE --- */
+        // Using oscillator for simple beeps to avoid external assets breaking
+        // Real XP sounds would be loaded via Audio() with URLs
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSound(type) {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            gain.gain.value = volume / 100;
+
+            const now = audioContext.currentTime;
+            
+            if (type === 'startup') {
+                // Windows Chord-like
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+                osc.start(now);
+                osc.stop(now + 1.5);
+            } else if (type === 'click') {
+                // Short click
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1200, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'error') {
+                // Error chord
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'shutdown') {
+                // Shutdown sound
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.5);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 1);
+                osc.start(now);
+                osc.stop(now + 1);
+            }
+        }
+
+        function toggleVolume() {
+            volume = volume > 0 ? 0 : 50;
+            playSound('click');
+        }
+
+        /* --- DESKTOP ICONS --- */
+        function renderDesktop() {
+            const area = document.getElementById('desktop-area');
+            const items = [
+                { label: 'My Computer', icon: ICONS.computer, app: 'explorer' },
+                { label: 'My Documents', icon: ICONS.docs, app: 'explorer' },
+                { label: 'Recycle Bin', icon: ICONS.recycle, app: null },
+                { label: 'About Me', icon: ICONS.notepad, app: 'notepad' },
+                { label: 'Projects', icon: ICONS.folder, app: 'explorer' },
+                { label: 'Contact', icon: ICONS.email, app: 'email' },
+            ];
+
+            items.forEach((item, i) => {
+                const el = document.createElement('div');
+                el.className = 'desktop-icon cursor-pointer flex flex-col items-center';
+                el.style.top = (20 + (Math.floor(i / 10) * 100)) + 'px'; // Grid logic y
+                el.style.left = (20 + ((i % 10) * 90)) + 'px'; // Grid logic x
+                el.innerHTML = `<img src="${item.icon}" class="w-8 h-8 pointer-events-none pixelated"><p class="pointer-events-none">${item.label}</p>`;
+                
+                // Drag Logic
+                el.onmousedown = (e) => startIconDrag(e, el);
+                
+                // Click/Open Logic
+                el.onclick = (e) => {
+                    e.stopPropagation();
+                    deselectAll();
+                    el.classList.add('selected');
+                };
+                el.ondblclick = () => {
+                    if (item.app) openApp(item.app);
+                    else playSound('error');
+                };
+
+                area.appendChild(el);
+            });
+        }
+
+        function deselectAll() {
+            document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            // Hide Start Menu if clicking desktop
+            document.getElementById('start-menu').classList.add('hidden');
+        }
+
+        /* --- WINDOW SYSTEM --- */
+        function openApp(appId, titleOverride) {
+            playSound('click');
+            const app = APPS[appId];
+            const id = 'win-' + Date.now();
+            const template = document.getElementById(app.tpl);
+            const win = template.content.cloneNode(true).querySelector('.xp-window');
+            
+            win.id = id;
+            win.style.position = 'absolute';
+            win.style.top = (50 + (Object.keys(windows).length * 20)) + 'px';
+            win.style.left = (50 + (Object.keys(windows).length * 20)) + 'px';
+            win.style.zIndex = ++zIndex;
+
+            // Setup Content
+            win.querySelector('.win-title-text').innerText = titleOverride || app.title;
+            win.querySelector('.win-icon').src = app.icon;
+            if (app.tpl === 'tpl-explorer') win.querySelector('.win-icon-addr').src = app.icon;
+
+            if (app.tpl === 'tpl-notepad') {
+                win.querySelector('.win-content-text').value = app.data;
+            } else if (app.tpl === 'tpl-explorer') {
+                const container = win.querySelector('.win-content-html');
+                if (appId === 'explorer' && !app.data) {
+                    // Default My Computer view
+                     container.innerHTML = `<div class="col-span-2 text-sm text-gray-500">Scanning for drives...<br>(Use Desktop icons to navigate)</div>`;
+                } else {
+                    app.data.forEach(p => {
+                        const item = document.createElement('div');
+                        item.className = 'flex items-start gap-2 p-2 hover:bg-blue-100 cursor-pointer rounded';
+                        item.innerHTML = `<img src="${p.icon}" class="w-8 h-8"><div class="text-xs font-bold pt-1">${p.name}<div class="font-normal text-gray-500">${p.desc}</div></div>`;
+                        item.onclick = () => {
+                            if (p.type === 'folder') {
+                                openApp('explorer', p.name);
+                            } else {
+                                showErrorDialog('File Error', `Cannot open ${p.name}. File type not supported.`);
+                            }
+                        };
+                        container.appendChild(item);
+                    });
+                }
+                if (titleOverride) win.querySelector('.win-address-text').innerText = titleOverride;
+                
+                // Update details panel
+                const details = win.querySelector('#explorer-details');
+                if (app.data) {
+                    details.innerHTML = `<div>Folder contains ${app.data.length} items</div>`;
+                }
+            } else if (app.tpl === 'tpl-paint') {
+                setupPaint(win.querySelector('canvas'));
+            }
+
+            document.getElementById('desktop-area').appendChild(win);
+            
+            // Register
+            windows[id] = { el: win, title: titleOverride || app.title, icon: app.icon, state: 'normal' };
+            activeWin = id;
+            
+            // Taskbar
+            addTaskbarItem(id, titleOverride || app.title, app.icon);
+            
+            // Focus
+            win.onmousedown = () => focusWindow(id);
+            focusWindow(id);
+        }
+
+        function closeWindow(btn) {
+            const win = btn.closest('.xp-window');
+            delete windows[win.id];
+            win.remove();
+            document.getElementById('tb-' + win.id).remove();
+            playSound('click');
+        }
+
+        function minimizeWindow(btn) {
+            const win = btn.closest('.xp-window');
+            win.style.display = 'none';
+            windows[win.id].state = 'minimized';
+            document.getElementById('tb-' + win.id).classList.remove('active');
+            playSound('click');
+        }
+
+        function maximizeWindow(btn) {
+            const win = btn.closest('.xp-window');
+            if (win.style.width === '100%') {
+                win.style.width = win.dataset.w;
+                win.style.height = win.dataset.h;
+                win.style.top = win.dataset.t;
+                win.style.left = win.dataset.l;
+            } else {
+                win.dataset.w = win.style.width;
+                win.dataset.h = win.style.height;
+                win.dataset.t = win.style.top;
+                win.dataset.l = win.style.left;
+                win.style.width = '100%';
+                win.style.height = (window.innerHeight - 30) + 'px';
+                win.style.top = '0';
+                win.style.left = '0';
+            }
+            playSound('click');
+        }
+
+        function focusWindow(id) {
+            const win = windows[id].el;
+            win.style.zIndex = ++zIndex;
+            win.style.display = 'flex';
+            
+            // Update Headers (Dim inactive ones)
+            document.querySelectorAll('.window-header').forEach(h => {
+                h.style.background = 'linear-gradient(180deg, #7697E7 0%, #7697E7 100%)'; // Inactive blue
+            });
+            win.querySelector('.window-header').style.background = ''; // Revert to CSS default (Active Gloss)
+
+            // Update Taskbar
+            document.querySelectorAll('.task-item').forEach(t => t.classList.remove('active'));
+            document.getElementById('tb-' + id).classList.add('active');
+            
+            activeWin = id;
+        }
+
+        function addTaskbarItem(id, title, icon) {
+            const bar = document.getElementById('taskbar-list');
+            const item = document.createElement('div');
+            item.id = 'tb-' + id;
+            item.className = 'task-item h-[22px] w-[150px] flex items-center gap-2 px-2 cursor-pointer active';
+            item.innerHTML = `<img src="${icon}" class="w-4 h-4"><span class="text-xs truncate">${title}</span>`;
+            item.onclick = () => {
+                if (windows[id].state === 'minimized' || activeWin !== id) {
+                    windows[id].state = 'normal';
+                    focusWindow(id);
+                } else {
+                    minimizeWindow(windows[id].el.querySelector('.btn-min'));
+                }
+            };
+            bar.appendChild(item);
+        }
+
+        function minimizeAll() {
+            Object.keys(windows).forEach(id => {
+                if(windows[id].state !== 'minimized') minimizeWindow(windows[id].el.querySelector('.btn-min'));
+            });
+        }
+
+        /* --- DRAGGING LOGIC --- */
+        let dragItem = null;
+        let dragOffset = { x: 0, y: 0 };
+
+        function startDrag(e, el) {
+            if (el.style.width === '100%') return; // Maximized
+            e.preventDefault();
+            dragItem = el;
+            dragOffset.x = e.clientX - el.getBoundingClientRect().left;
+            dragOffset.y = e.clientY - el.getBoundingClientRect().top;
+            
+            // If dragging window, focus it
+            if (el.classList.contains('xp-window')) focusWindow(el.id);
+
+            document.onmousemove = doDrag;
+            document.onmouseup = stopDrag;
+        }
+
+        function startIconDrag(e, el) {
+            e.preventDefault();
+            e.stopPropagation(); // Don't click desktop
+            deselectAll();
+            el.classList.add('selected');
+            
+            dragItem = el;
+            // Center drag
+            dragOffset.x = el.offsetWidth / 2;
+            dragOffset.y = el.offsetHeight / 2;
+
+            document.onmousemove = doDrag;
+            document.onmouseup = stopDrag;
+        }
+
+        function doDrag(e) {
+            if (!dragItem) return;
+            e.preventDefault();
+            dragItem.style.left = (e.clientX - dragOffset.x) + 'px';
+            dragItem.style.top = (e.clientY - dragOffset.y) + 'px';
+        }
+
+        function stopDrag() {
+            dragItem = null;
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+
+        /* --- UTILS --- */
+        function toggleStartMenu() {
+            const menu = document.getElementById('start-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                menu.style.zIndex = ++zIndex;
+                playSound('click');
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const am = hours < 12 ? 'AM' : 'PM';
+            hours = hours % 12 || 12;
+            const mins = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').innerText = `${hours}:${mins} ${am}`;
+        }
+
+        function showErrorDialog(title, message) {
+            playSound('error');
+            document.getElementById('error-title').innerText = title;
+            document.getElementById('error-message').innerText = message;
+            document.getElementById('error-dialog').style.display = 'block';
+        }
+
+        function closeErrorDialog() {
+            playSound('click');
+            document.getElementById('error-dialog').style.display = 'none';
+        }
+
+        /* --- NOTEPAD MENU --- */
+        function notepadMenu(menu) {
+            playSound('click');
+            if (menu === 'file') {
+                showErrorDialog('Notepad', 'File operations not implemented in this demo.');
+            } else if (menu === 'edit') {
+                showErrorDialog('Notepad', 'Edit operations not implemented in this demo.');
+            } else if (menu === 'format') {
+                showErrorDialog('Notepad', 'Format operations not implemented in this demo.');
+            }
+        }
+
+        /* --- EXPLORER FUNCTIONS --- */
+        function explorerNavigate() {
+            playSound('click');
+            showErrorDialog('Explorer', 'Navigation not implemented in this demo.');
+        }
+
+        function explorerTask(task) {
+            playSound('click');
+            if (task === 'info') {
+                showErrorDialog('System Information', 'Windows XP Professional\nVersion 2002\nService Pack 3\n\nIntel(R) Core(TM) i7-9700K CPU @ 3.60GHz\n3.60 GHz, 16.0 GB RAM');
+            } else if (task === 'desktop') {
+                openApp('explorer', 'Desktop');
+            } else if (task === 'docs') {
+                openApp('explorer', 'My Documents');
+            }
+        }
+
+        /* --- PAINT APP --- */
+        function setupPaint(canvas) {
+            const ctx = canvas.getContext('2d');
+            let painting = false;
+
+            canvas.onmousedown = (e) => {
+                painting = true;
+                const rect = canvas.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                
+                if (paintTool === 'pen' || paintTool === 'eraser') {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                }
+            };
+            
+            canvas.onmousemove = (e) => {
+                if (!painting) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                if (paintTool === 'pen' || paintTool === 'eraser') {
+                    ctx.lineWidth = paintTool === 'eraser' ? 10 : lineWidth;
+                    ctx.strokeStyle = paintTool === 'eraser' ? 'white' : paintColor;
+                    ctx.lineCap = 'round';
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+            };
+            
+            canvas.onmouseup = (e) => {
+                if (!painting) return;
+                painting = false;
+                
+                const rect = canvas.getBoundingClientRect();
+                const endX = e.clientX - rect.left;
+                const endY = e.clientY - rect.top;
+                
+                ctx.lineWidth = lineWidth;
+                ctx.strokeStyle = paintColor;
+                ctx.lineCap = 'round';
+                
+                if (paintTool === 'line') {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                } else if (paintTool === 'rectangle') {
+                    ctx.beginPath();
+                    ctx.rect(startX, startY, endX - startX, endY - startY);
+                    ctx.stroke();
+                } else if (paintTool === 'circle') {
+                    const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                    ctx.beginPath();
+                    ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                } else if (paintTool === 'text') {
+                    const text = prompt('Enter text:');
+                    if (text) {
+                        ctx.font = '16px Tahoma';
+                        ctx.fillStyle = paintColor;
+                        ctx.fillText(text, startX, startY);
+                    }
+                }
+            };
+        }
+
+        function selectPaintTool(tool) {
+            paintTool = tool;
+            document.querySelectorAll('.paint-tool').forEach(el => el.classList.remove('active'));
+            event.target.closest('.paint-tool').classList.add('active');
+            playSound('click');
+        }
+
+        function setColor(c) { 
+            paintColor = c; 
+            document.getElementById('current-color').style.backgroundColor = c;
+            playSound('click');
+        }
+
+        function setLineWidth(width) {
+            lineWidth = parseInt(width);
+            playSound('click');
+        }
+
+        function paintMenu(menu) {
+            playSound('click');
+            if (menu === 'file') {
+                showErrorDialog('Paint', 'File operations not implemented in this demo.');
+            } else if (menu === 'edit') {
+                showErrorDialog('Paint', 'Edit operations not implemented in this demo.');
+            } else if (menu === 'view') {
+                showErrorDialog('Paint', 'View operations not implemented in this demo.');
+            } else if (menu === 'image') {
+                showErrorDialog('Paint', 'Image operations not implemented in this demo.');
+            } else if (menu === 'colors') {
+                showErrorDialog('Paint', 'Color operations not implemented in this demo.');
+            } else if (menu === 'help') {
+                showErrorDialog('Paint Help', 'Paint is a simple drawing program.\n\nTools:\n- Pen: Draw freehand\n- Eraser: Remove parts of your drawing\n- Line: Draw straight lines\n- Rectangle: Draw rectangles\n- Circle: Draw circles\n- Text: Add text to your drawing');
+            }
+        }
+    </script>
+</body>
+</html>
