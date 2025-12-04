@@ -332,10 +332,7 @@
     <!-- --- BOOT SCREEN --- -->
     <div id="boot-screen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center">
         <!-- Windows Logo -->
-        <svg class="w-32 h-32 mb-8" viewBox="0 0 24 24">
-            <path fill="#FFA500" d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z"/>
-            <path fill="#00A1F1" d="M4 4h5v5H4zm11 0h5v5h-5zM4 15h5v5H4zm11 0h5v5h-5z"/>
-        </svg>
+        <img src="logo.png" class="w-48 mb-8">
         
         <!-- Text Content -->
         <div class="text-white text-3xl font-bold mb-2">Mohammad Sayeed</div>
@@ -403,19 +400,15 @@
             <div class="h-24 bg-[#003399] border-b-2 border-[#F6851F]"></div>
             <div class="flex-1 bg-[#5A7EDC] flex items-center justify-center gap-10">
                 <div class="text-right border-r border-white/30 pr-10 py-10">
-                    <svg class="w-40 h-40 drop-shadow-lg" viewBox="0 0 24 24">
-                        <path fill="#FFA500" d="M2 2h9v9H2zm11 0h9v9h-9zM2 13h9v9H2zm11 0h9v9h-9z"/>
-                        <path fill="#00A1F1" d="M4 4h5v5H4zm11 0h5v5h-5zM4 15h5v5H4zm11 0h5v5h-5z"/>
-                    </svg>
-                    <div class="text-white text-2xl font-bold mt-4">Mitchlvin xp</div>
-                    <div class="text-white text-sm mt-1">Visual Designer</div>
+                    <img src="logo.png" class="w-48 mb-8">
+                    <div class="text-white text-2xl font-bold mt-4">Sayeed xp</div>
+                    <div class="text-white text-sm mt-1">Web Designer</div>
                 </div>
                 <div class="pl-0">
                     <div onclick="login()" class="flex items-center gap-4 group cursor-pointer hover:bg-[#F9A838]/20 p-2 rounded-lg transition-colors">
                         <div class="w-16 h-16 bg-yellow-300 rounded border-2 border-white overflow-hidden shadow-lg relative">
                              <!-- Simple Duck SVG -->
-                             <svg class="w-full h-full text-orange-500 bg-yellow-100 p-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-                        </div>
+                             <img src="image.png" class="w-48 mb-8">
                         <div class="text-white">
                             <div class="text-2xl font-normal">Mohammad Sayeed</div>
                             <div class="text-sm text-blue-100 group-hover:text-white">Web Designer</div>
@@ -440,7 +433,7 @@
 
     <!-- --- DESKTOP --- -->
     <div id="desktop" class="absolute inset-0 hidden flex-col justify-between overflow-hidden" 
-         style="background: url('start.png') no-repeat center center fixed; background-size: cover;">
+         style="background: url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png') no-repeat center center fixed; background-size: cover;">
         
         <!-- Desktop Area -->
         <div id="desktop-area" class="flex-1 relative z-0" onclick="deselectAll()">
@@ -454,7 +447,7 @@
                 <div class="w-10 h-10 rounded border-2 border-white overflow-hidden bg-yellow-200 shadow-md">
                     <svg class="w-full h-full text-orange-500 p-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                 </div>
-                <span class="text-white font-bold text-lg drop-shadow">Mitch Ivin</span>
+                <span class="text-white font-bold text-lg drop-shadow">Mohammad Sayeed</span>
             </div>
             
             <!-- Body -->
