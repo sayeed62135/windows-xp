@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sayeed xp - Professional Edition</title>
+    <title>Sayeed XP - Professional Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* --- XP FONTS & BASICS --- */
@@ -331,11 +331,11 @@
 
     <!-- --- BOOT SCREEN --- -->
     <div id="boot-screen" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center">
-        <!-- Windows Logo -->
-        <img src="logo.png" class="w-48 mb-8">
+        <!-- Custom Logo -->
+        <img src="logo.png" class="w-32 h-32 mb-8">
         
         <!-- Text Content -->
-        <div class="text-white text-3xl font-bold mb-2">Mohammad Sayeed</div>
+        <div class="text-white text-3xl font-bold mb-2">Sayeed xp</div>
         <div class="text-gray-400 text-sm mb-12">Web Designer</div>
         
         <!-- Progress Bar - Classic XP Style with Multiple Segments -->
@@ -400,21 +400,22 @@
             <div class="h-24 bg-[#003399] border-b-2 border-[#F6851F]"></div>
             <div class="flex-1 bg-[#5A7EDC] flex items-center justify-center gap-10">
                 <div class="text-right border-r border-white/30 pr-10 py-10">
-                    <img src="logo.png" class="w-48 mb-8">
+                    <img src="logo.png" class="w-40 h-40 drop-shadow-lg">
                     <div class="text-white text-2xl font-bold mt-4">Sayeed xp</div>
                     <div class="text-white text-sm mt-1">Web Designer</div>
                 </div>
                 <div class="pl-0">
                     <div onclick="login()" class="flex items-center gap-4 group cursor-pointer hover:bg-[#F9A838]/20 p-2 rounded-lg transition-colors">
                         <div class="w-16 h-16 bg-yellow-300 rounded border-2 border-white overflow-hidden shadow-lg relative">
-                             <!-- Simple Duck SVG -->
-                             <img src="image.png" class="w-48 mb-8">
+                             <!-- Custom User Image -->
+                             <img src="image.png" class="w-full h-full object-cover">
+                        </div>
                         <div class="text-white">
-                            <div class="text-2xl font-normal">Mohammad Sayeed</div>
+                            <div class="text-2xl font-normal">Sayeed</div>
                             <div class="text-sm text-blue-100 group-hover:text-white">Web Designer</div>
                         </div>
                     </div>
-                    <div class="text-white text-center mt-4">To begin, click on Sayeed XP to log in</div>
+                    <div class="text-white text-center mt-4">To begin, click on Sayeed to log in</div>
                 </div>
             </div>
             <div class="h-24 bg-[#003399] border-t-2 border-[#F6851F] flex items-center justify-between px-10">
@@ -445,9 +446,9 @@
             <!-- Header -->
             <div class="start-header h-16 flex items-center px-2 gap-3 shadow-inner border-b border-blue-400">
                 <div class="w-10 h-10 rounded border-2 border-white overflow-hidden bg-yellow-200 shadow-md">
-                    <svg class="w-full h-full text-orange-500 p-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                    <img src="start.png" class="w-full h-full object-cover">
                 </div>
-                <span class="text-white font-bold text-lg drop-shadow">Mohammad Sayeed</span>
+                <span class="text-white font-bold text-lg drop-shadow">Sayeed</span>
             </div>
             
             <!-- Body -->
@@ -541,7 +542,7 @@
         <div class="taskbar h-[30px] w-full absolute bottom-0 z-[100] flex items-center select-none font-sans">
             <!-- Start Btn -->
             <div class="start-btn h-full px-2 flex items-center gap-1 cursor-pointer relative z-10 mr-1" onclick="toggleStartMenu()">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Microsoft_Windows_XP_Logo.svg" class="w-5 h-5 italic drop-shadow-sm">
+                <img src="logo.png" class="w-5 h-5 italic drop-shadow-sm">
                 <span class="text-white font-bold italic text-[14px] pr-2" style="text-shadow: 1px 1px 1px rgba(0,0,0,0.5);">start</span>
             </div>
 
@@ -579,7 +580,7 @@
 
     <!-- --- SHUTDOWN DIALOG --- -->
     <div id="shutdown-dialog" class="shutdown-dialog">
-        <div class="shutdown-dialog-header">Turn off MitchIvin XP</div>
+        <div class="shutdown-dialog-header">Turn off Sayeed XP</div>
         <div class="shutdown-options">
             <div class="shutdown-option" onclick="restart()">
                 <div class="shutdown-icon bg-green-500">
