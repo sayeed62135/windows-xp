@@ -920,7 +920,7 @@
             
             if (type === 'startup') {
                 // Play the actual Windows XP startup sound
-                const audio = new Audio('https://www.myinstants.com/en/instant/windows-xp-startup-sound-58970/?utm_source=copy&utm_medium=share');
+                const audio = new Audio('windows-xp-startup.mp3');
                 audio.volume = volume / 100;
                 audio.play().catch(e => console.log('Audio play failed:', e));
             } else if (type === 'click') {
